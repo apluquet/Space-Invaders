@@ -1,13 +1,19 @@
 import pygame
 import numpy as np
 
+import player
+
 # This class represents the bord of Space Invaders. It manages the position of
 # each element.
 class Board:
     # Private class variables
-    __nb_squares_width = 20
+    __step_size = 13
     __nb_invaders_cols = 11
     __nb_invaders_lines = 5
+    __space_btw_invaders = 26
+    __invader_size = 20
+
+    __margin = 20
 
     # Class initialization
     def __init__(self, width, height):
@@ -20,24 +26,44 @@ class Board:
         dtype=int)
 
         # Size in pixels of a screen subdivision to place one invader
-        self.__invader_square_size = self.__width / self.__nb_squares_width
+        #self.__invader_square_size = self.__width / self.__nb_squares_width
 
         # Time in ms between invaders move
-        self.__move_time = 500
+        self.__move_time = 100
         # Last time a move was made
         self.__last_move_time = 0
 
         # For the invaders movement, save the last (x,y) positon of the top
         # right invader
-        self.__invaders_last_x = 0
-        self.__invaders_last_y = 0
+        self.__invaders_last_x = self.__margin
+        self.__invaders_last_y = self.__margin
 
         # For the invaders movement, save if invaders movement is goind right
         # or not
         self.__move_right = True
         # Count the number of moves to know when to shift down
-        self.__nb_movements = 1
+        self.__nb_movements = 0
 
+        self.__player = player.Player(self.__width / 2, self.__width)
+
+    def __is_at_right_border(self):
+        # Check if at right border
+        # Current x_pos + nb_cols * size_of_square_with_invader + width_invader
+        if self.__invaders_last_x + self.__space_btw_invaders *\
+            self.__nb_invaders_cols + self.__invader_size >\
+                self.__width - self.__margin:
+            return True
+        return False
+
+    def __is_at_left_border(self):
+        # Check if at left border
+        if self.__invaders_last_x - self.__step_size < self.__margin:
+            return True
+        return False
+
+    def __can_move_side(self):
+        return (self.__move_right and not self.__is_at_right_border()) or\
+            (not self.__move_right and not self.__is_at_left_border())
 
     # Class methods
     def display_board(self, screen, time):
@@ -48,20 +74,13 @@ class Board:
             self.__last_move_time += self.__move_time
             move = True
 
-        if move:
-            # Set move right of left (!right) depending on the number of
-            # movements
-            self.__move_right = (((self.__nb_movements) // 10 % 2) == 0)
+        if move and self.__can_move_side():
+            self.__invaders_last_x += self.__step_size if self.__move_right else\
+                -self.__step_size
 
-            # If at a border, shift down : movement on Y axis
-            if (self.__nb_movements) % 10 == 0 and self.__nb_movements != 0:
-                self.__invaders_last_y += self.__invader_square_size
-            # Else, movement on X axis
-            else:
-                self.__invaders_last_x += self.__invader_square_size\
-                    if self.__move_right else -self.__invader_square_size
-
-            self.__nb_movements += 1
+        elif move and not self.__can_move_side():
+            self.__invaders_last_y += self.__step_size
+            self.__move_right = not self.__move_right
 
         # Display the invaders with movement
         for i in range (self.__nb_invaders_cols):
@@ -69,11 +88,17 @@ class Board:
 
                 if (self.__invaders[j,i]):
                     pygame.draw.rect(screen, "red",
-                    pygame.Rect(self.__invaders_last_x + i * self.__invader_square_size,
-                    self.__invaders_last_y + j * self.__invader_square_size,30, 30))
+                    pygame.Rect(self.__invaders_last_x + i * self.__space_btw_invaders,
+                    self.__invaders_last_y + j * self.__space_btw_invaders + 3,\
+                        self.__invader_size, self.__invader_size + 3))
 
         # Display the player
         player_width = 40
-        pygame.draw.rect(screen, "green", pygame.Rect(self.__width / 2 -\
-            player_width / 2, self.__height - player_width, player_width,
-            player_width))
+        self.__player.get_keyboard_input()
+        player_pos_x = self.__player.pos_x
+        pygame.draw.rect(screen, "green", pygame.Rect(player_pos_x,\
+            self.__height - 150, player_width, player_width))
+
+        # Display the rest of the bord style
+        pygame.draw.line(screen, "green", (20, self.__height - 100),\
+            (580, self.__height - 100), 2)

@@ -6,7 +6,7 @@ pygame.init()
 pygame.display.set_caption('Space Invaders')
 
 # 4:3 screen format
-screen = pygame.display.set_mode((900, 600))
+screen = pygame.display.set_mode((600, 700))
 clock = pygame.time.Clock()
 running = True
 
