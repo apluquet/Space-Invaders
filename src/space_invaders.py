@@ -1,27 +1,32 @@
-# Example file showing a circle moving on screen
 import pygame
+import board
 
-# pygame setup
+# Pygame setup
 pygame.init()
 pygame.display.set_caption('Space Invaders')
+
 # 4:3 screen format
 screen = pygame.display.set_mode((900, 600))
 clock = pygame.time.Clock()
 running = True
 
+board = board.Board(screen.get_width(), screen.get_height())
+
 while running:
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
+    # Pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # fill the screen with a color to wipe away anything from last frame
+    # Fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
+    # Display the elements of the game (invaders, player)
+    board.display_board(screen)
 
-    # flip() the display to put your work on screen
+    # Flip() the display to put your work on screen
     pygame.display.flip()
 
-    clock.tick(60)  # limits FPS to 60
+    # Limits FPS to 60
+    clock.tick(60)
 
 pygame.quit()
