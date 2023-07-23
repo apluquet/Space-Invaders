@@ -21,7 +21,8 @@ while running:
     # Fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
     # Display the elements of the game (invaders, player)
-    board.display_board(screen)
+    time = pygame.time.get_ticks()
+    board.display_board(screen, time)
 
     # Flip() the display to put your work on screen
     pygame.display.flip()
