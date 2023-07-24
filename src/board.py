@@ -7,13 +7,15 @@ import player
 # each element.
 class Board:
     # Private class variables
-    __step_size = 13
+    __step_size = 1
     __nb_invaders_cols = 11
     __nb_invaders_lines = 5
-    __space_btw_invaders = 26
+    __space_btw_invaders = 45
     __invader_size = 20
 
     __margin = 20
+
+    __invader_img = pygame.transform.rotozoom(pygame.image.load("img/my_invader.png"), 0, 1)
 
     # Class initialization
     def __init__(self, width, height):
@@ -29,7 +31,7 @@ class Board:
         #self.__invader_square_size = self.__width / self.__nb_squares_width
 
         # Time in ms between invaders move
-        self.__move_time = 100
+        self.__move_time = 10
         # Last time a move was made
         self.__last_move_time = 0
 
@@ -41,8 +43,6 @@ class Board:
         # For the invaders movement, save if invaders movement is goind right
         # or not
         self.__move_right = True
-        # Count the number of moves to know when to shift down
-        self.__nb_movements = 0
 
         self.__player = player.Player(self.__width / 2, self.__width)
 
@@ -87,10 +87,13 @@ class Board:
             for j in range (self.__nb_invaders_lines):
 
                 if (self.__invaders[j,i]):
-                    pygame.draw.rect(screen, "red",
-                    pygame.Rect(self.__invaders_last_x + i * self.__space_btw_invaders,
-                    self.__invaders_last_y + j * self.__space_btw_invaders + 3,\
-                        self.__invader_size, self.__invader_size + 3))
+                    x = self.__invaders_last_x + i * self.__space_btw_invaders
+                    y = self.__invaders_last_y + j * self.__space_btw_invaders + 3
+                    screen.blit(self.__invader_img, (x,y))
+                    #pygame.draw.rect(screen, "red",
+                    #pygame.Rect(self.__invaders_last_x + i * self.__space_btw_invaders,
+                    #self.__invaders_last_y + j * self.__space_btw_invaders + 3,\
+                    #    self.__invader_size, self.__invader_size + 3))
 
         # Display the player
         player_width = 40
