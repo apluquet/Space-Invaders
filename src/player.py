@@ -2,7 +2,8 @@ import pygame
 
 class Player:
 
-    __dt = 8
+    __dt = 4
+    player_img = pygame.image.load("img/my_player.png")
 
     def __init__(self, pos_x, board_width):
         self.pos_x = pos_x

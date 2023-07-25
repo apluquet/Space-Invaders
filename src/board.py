@@ -102,9 +102,9 @@ class Board:
         player_width = 40
         self.__player.get_keyboard_input()
         player_pos_x = self.__player.pos_x
-        pygame.draw.rect(screen, "green", pygame.Rect(player_pos_x,\
-            self.__height - 150, player_width, player_width))
 
-        # Display the rest of the bord style
+        screen.blit(self.__player.player_img, (player_pos_x, self.__height - 150))
+
+        # Display the rest of the board style
         pygame.draw.line(screen, "green", (20, self.__height - 100),\
             (580, self.__height - 100), 2)
