@@ -54,7 +54,7 @@ class Board:
         # or not
         self.__move_right = True
 
-        self.__player = player.Player(self.__width / 2, self.__width)
+        self.__player = player.Player(self.__width / 2, self.__width, self.__margin)
 
     def __is_at_right_border(self):
         # Check if at right border

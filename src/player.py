@@ -5,11 +5,11 @@ class Player:
     __dt = 4
     player_img = pygame.image.load("img/my_player.png")
 
-    def __init__(self, pos_x, board_width):
+    def __init__(self, pos_x, board_width, margin):
         self.pos_x = pos_x
 
-        self.limit_x_min = 20
-        self.limit_x_max = board_width - 20 - 40
+        self.limit_x_min = margin
+        self.limit_x_max = board_width - margin - self.player_img.get_size()[0]
 
 
     def get_keyboard_input(self):
