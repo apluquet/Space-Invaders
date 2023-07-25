@@ -9,8 +9,8 @@ class Board:
     # Private class variables
 
     # Step size in pixels for invaders movement
-    __step_x_size = 1
-    __step_y_size = 15
+    __step_x_size = 15
+    __step_y_size = 30
 
     # Image of an invader
     __invader_img = pygame.image.load("img/my_invader.png")
@@ -120,8 +120,20 @@ class Board:
             (self.__width - self.__margin, self.__height - 100), 2)
 
 
+    def check_victory(self):
+        # If no more invaders, player win
+        if self.__invaders.sum() == 0:
+            return 1
+        # If invaders are too low (same level as the player), player loose
+        if  self.__invaders_last_y + self.__nb_invaders_lines *\
+            (self.__invader_height + self.__margin_btw_invaders) >\
+                self.__height - 150:
+            return -1
+        else:
+            return 0
+
     # Public class methods
     def display_board(self, screen, time):
         self.__display_invaders(screen, time)
         self.__display_player(screen)
-        self.__display_elements(screen)    
+        self.__display_elements(screen)  
