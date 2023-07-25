@@ -3,19 +3,26 @@ import numpy as np
 
 import player
 
-# This class represents the bord of Space Invaders. It manages the position of
+# This class represents the board of Space Invaders. It manages the position of
 # each element.
 class Board:
     # Private class variables
-    __step_size = 1
+
+    # Step size in pixels for invaders movement
+    __step_x_size = 1
+    __step_y_size = 15
+
     __nb_invaders_cols = 11
     __nb_invaders_lines = 5
+
     __space_btw_invaders = 45
     __invader_size = 20
 
+    # Margin between borders of the window and the game in pixels
     __margin = 20
 
-    __invader_img = pygame.transform.rotozoom(pygame.image.load("img/my_invader.png"), 0, 1)
+    # Image of an invader
+    __invader_img = pygame.image.load("img/my_invader.png")
 
     # Class initialization
     def __init__(self, width, height):
@@ -57,7 +64,7 @@ class Board:
 
     def __is_at_left_border(self):
         # Check if at left border
-        if self.__invaders_last_x - self.__step_size < self.__margin:
+        if self.__invaders_last_x - self.__step_x_size < self.__margin:
             return True
         return False
 
@@ -75,11 +82,11 @@ class Board:
             move = True
 
         if move and self.__can_move_side():
-            self.__invaders_last_x += self.__step_size if self.__move_right else\
-                -self.__step_size
+            self.__invaders_last_x += self.__step_x_size if self.__move_right else\
+                -self.__step_x_size
 
         elif move and not self.__can_move_side():
-            self.__invaders_last_y += self.__step_size
+            self.__invaders_last_y += self.__step_y_size
             self.__move_right = not self.__move_right
 
         # Display the invaders with movement
@@ -90,10 +97,6 @@ class Board:
                     x = self.__invaders_last_x + i * self.__space_btw_invaders
                     y = self.__invaders_last_y + j * self.__space_btw_invaders + 3
                     screen.blit(self.__invader_img, (x,y))
-                    #pygame.draw.rect(screen, "red",
-                    #pygame.Rect(self.__invaders_last_x + i * self.__space_btw_invaders,
-                    #self.__invaders_last_y + j * self.__space_btw_invaders + 3,\
-                    #    self.__invader_size, self.__invader_size + 3))
 
         # Display the player
         player_width = 40
