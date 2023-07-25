@@ -114,5 +114,5 @@ class Board:
         screen.blit(self.__player.player_img, (player_pos_x, self.__height - 150))
 
         # Display the rest of the board style
-        pygame.draw.line(screen, "green", (20, self.__height - 100),\
-            (580, self.__height - 100), 2)
+        pygame.draw.line(screen, "green", (self.__margin, self.__height - 100),\
+            (self.__width - self.__margin, self.__height - 100), 2)
