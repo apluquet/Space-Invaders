@@ -56,6 +56,7 @@ class Board:
 
         self.__player = player.Player(self.__width / 2, self.__width, self.__margin)
 
+    # Private class methods
     def __is_at_right_border(self):
         # Check if at right border
 
@@ -81,10 +82,10 @@ class Board:
         return (self.__move_right and not self.__is_at_right_border()) or\
             (not self.__move_right and not self.__is_at_left_border())
 
-    # Class methods
-    def display_board(self, screen, time):
-
+    def __display_invaders(self, screen, time):
+        
         move = False
+        
         # Set move to True if enough elapsed time since last movement
         if time - self.__last_move_time > self.__move_time:
             self.__last_move_time += self.__move_time
@@ -106,13 +107,21 @@ class Board:
                     y = self.__invaders_last_y + j * (self.__invader_height + self.__margin_btw_invaders)
                     screen.blit(self.__invader_img, (x,y))
 
-        # Display the player
-        player_width = 40
+
+    def __display_player(self, screen):
         self.__player.get_keyboard_input()
         player_pos_x = self.__player.pos_x
 
         screen.blit(self.__player.player_img, (player_pos_x, self.__height - 150))
 
-        # Display the rest of the board style
+    def __display_elements(self, screen):
+        # Display the bottom line 
         pygame.draw.line(screen, "green", (self.__margin, self.__height - 100),\
             (self.__width - self.__margin, self.__height - 100), 2)
+
+
+    # Public class methods
+    def display_board(self, screen, time):
+        self.__display_invaders(screen, time)
+        self.__display_player(screen)
+        self.__display_elements(screen)    
