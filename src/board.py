@@ -12,18 +12,21 @@ class Board:
     __step_x_size = 1
     __step_y_size = 15
 
-    __nb_invaders_cols = 11
-    __nb_invaders_lines = 5
-
-    __space_btw_invaders = 45
-    __invader_size = 20
-
-    # Margin between borders of the window and the game in pixels
-    __margin = 20
-
     # Image of an invader
     __invader_img = pygame.image.load("img/my_invader.png")
 
+    __margin_btw_invaders = 15
+
+    # Size in pxl of the invader image
+    __invader_width = __invader_img.get_size()[0]
+    __invader_height = __invader_img.get_size()[1]
+
+    __nb_invaders_cols = 11
+    __nb_invaders_lines = 5
+
+    # Margin between borders of the window and the game in pixels
+    __margin = 20
+    
     # Class initialization
     def __init__(self, width, height):
         # Screen width and height in pixels
@@ -42,7 +45,7 @@ class Board:
         # Last time a move was made
         self.__last_move_time = 0
 
-        # For the invaders movement, save the last (x,y) positon of the top
+        # For the invaders movement, save the last (x,y) position of the top
         # right invader
         self.__invaders_last_x = self.__margin
         self.__invaders_last_y = self.__margin
@@ -55,20 +58,26 @@ class Board:
 
     def __is_at_right_border(self):
         # Check if at right border
-        # Current x_pos + nb_cols * size_of_square_with_invader + width_invader
-        if self.__invaders_last_x + self.__space_btw_invaders *\
-            self.__nb_invaders_cols + self.__invader_size >\
+
+        # x_pos + nb_cols * (invader_width + margin_btw_invaders) - margin_btw_invaders + width_invader
+        # Remove one margin for the invader furthest to the right
+
+        if self.__invaders_last_x + self.__nb_invaders_cols * (self.__invader_width +\
+            self.__margin_btw_invaders) - self.__margin_btw_invaders + self.__step_x_size >=\
                 self.__width - self.__margin:
             return True
         return False
 
     def __is_at_left_border(self):
         # Check if at left border
+
         if self.__invaders_last_x - self.__step_x_size < self.__margin:
             return True
         return False
 
     def __can_move_side(self):
+        # Check if it can move side according to the direction and position of
+        # the borders
         return (self.__move_right and not self.__is_at_right_border()) or\
             (not self.__move_right and not self.__is_at_left_border())
 
@@ -92,10 +101,9 @@ class Board:
         # Display the invaders with movement
         for i in range (self.__nb_invaders_cols):
             for j in range (self.__nb_invaders_lines):
-
                 if (self.__invaders[j,i]):
-                    x = self.__invaders_last_x + i * self.__space_btw_invaders
-                    y = self.__invaders_last_y + j * self.__space_btw_invaders + 3
+                    x = self.__invaders_last_x + i * (self.__invader_width + self.__margin_btw_invaders)
+                    y = self.__invaders_last_y + j * (self.__invader_height + self.__margin_btw_invaders)
                     screen.blit(self.__invader_img, (x,y))
 
         # Display the player
