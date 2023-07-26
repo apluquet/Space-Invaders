@@ -31,10 +31,7 @@ while running and playing:
     screen.fill("black")
     # Display the elements of the game (invaders, player, other elements)
     time = pygame.time.get_ticks()
-    board.display_board(screen, time)
-
-    # Check victory of player, invaders or none
-    playing = board.check_victory(screen)
+    playing = board.play(screen, time)
 
     # Flip() the display to put your work on screen
     pygame.display.flip()

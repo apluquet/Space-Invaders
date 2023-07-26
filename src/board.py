@@ -1,5 +1,6 @@
 import pygame
 import numpy as np
+import random
 
 import player
 
@@ -127,6 +128,7 @@ class Board:
         for i in range (self.__player.remaining_lives):
             screen.blit(img_lives, (self.__margin + i * (live_width + margin_btw_lives), y_lives))
 
+
         # Display remaining invaders
         text_font = pygame.font.Font("fonts/moder_dos_437.ttf", 20)
         text_remaining_invaders = text_font.render("Remaining invaders " + str(self.__invaders.sum()), False, "white")
@@ -175,7 +177,19 @@ class Board:
         screen.blit(text_end, (self.__width // 2 - w_text_end // 2,y_top_left + 140))
         screen.blit(text_score, (self.__width // 2 - w_text_score // 2, y_top_left + 230))
 
-    def check_victory(self, screen):
+    def __invaders_shoot(self):
+        probability_shoot = 0.1
+        for i in range (self.__nb_invaders_cols):
+            j = self.__nb_invaders_lines - 1
+            while not self.__invaders[j][i] and j >= 0:
+                j-=1
+            if j >= 0:
+                nb = random.random()
+                if nb <= probability_shoot:
+                    # TODO SHOOT
+                    print("SHOOT")
+
+    def __check_victory(self, screen):
         # If no more invaders, player win
         if self.__invaders.sum() == 0:
             self.__endgame(screen, win=True)
@@ -188,8 +202,15 @@ class Board:
             return False
         return True # Continue game
     
-    # Public class methods
-    def display_board(self, screen, time):
+    def __display_board(self, screen, time):
         self.__display_invaders(screen, time)
         self.__display_player(screen)
         self.__display_elements(screen)
+
+    # Public class methods
+    def play(self, screen, time):
+        self.__display_board(screen, time)
+        self.__invaders_shoot()
+        game_continues = self.__check_victory(screen)
+
+        return game_continues
