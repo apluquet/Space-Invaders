@@ -3,6 +3,7 @@ import numpy as np
 import random
 
 import player
+import bullet
 
 # This class represents the board of Space Invaders. It manages the position of
 # each element.
@@ -57,6 +58,8 @@ class Game:
         self.__move_right = True
 
         self.__player = player.Player(self.__width / 2, self.__width, self.__margin)
+
+        self.__bullets = []
 
     # Private class methods
     def __is_at_right_border(self):
@@ -129,11 +132,16 @@ class Game:
         for i in range (self.__player.remaining_lives):
             screen.blit(img_lives, (self.__margin + i * (live_width + margin_btw_lives), y_lives))
 
-
         # Display remaining invaders
         text_font = pygame.font.Font("fonts/moder_dos_437.ttf", 20)
         text_remaining_invaders = text_font.render("Remaining invaders " + str(self.__invaders.sum()), False, "white")
         screen.blit(text_remaining_invaders, (self.__width - 350, self.__height - 60))
+
+        # Display bullets
+        for bullet in self.__bullets:
+            bullet.update_position(600)
+            rect = pygame.Rect(bullet.x, bullet.y, 2, 6)
+            pygame.draw.rect(screen, color="white", rect=rect)
 
 
     def __endgame(self, screen, win):
@@ -178,7 +186,12 @@ class Game:
         screen.blit(text_end, (self.__width // 2 - w_text_end // 2,y_top_left + 140))
         screen.blit(text_score, (self.__width // 2 - w_text_score // 2, y_top_left + 230))
 
-    def __invaders_shoot(self):
+    def __get_invader_pos(self, line, col):
+        x = self.__invaders_last_x + col * (self.__invader_width + self.__margin_x_btw_invaders)
+        y = self.__invaders_last_y + line * (self.__invader_height + self.__margin_y_btw_invaders )
+        return (x,y)
+
+    def __invaders_shoot(self, screen):
         probability_shoot = 0.01
         for i in range (self.__nb_invaders_cols):
             j = self.__nb_invaders_lines - 1
@@ -187,9 +200,13 @@ class Game:
             if j >= 0:
                 nb = random.random()
                 if nb <= probability_shoot:
-                    # TODO SHOOT
-                    print("SHOOT")
                     self.__invaders[j][i] = 0
+
+                    x, y = self.__get_invader_pos(j, i)
+                    x += self.__invader_width // 2
+                    y += self.__invader_height
+                    new_bullet = bullet.Bullet(x,y, (0, 1), True)
+                    self.__bullets.append(new_bullet)
 
     def __check_victory(self, screen):
         # If no more invaders, player win
@@ -211,8 +228,9 @@ class Game:
 
     # Public class methods
     def play(self, screen, time):
-        self.__display_board(screen, time)
-        self.__invaders_shoot()
         game_continues = self.__check_victory(screen)
+
+        self.__display_board(screen, time)
+        self.__invaders_shoot(screen)
 
         return game_continues
