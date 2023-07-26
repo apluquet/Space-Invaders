@@ -118,6 +118,15 @@ class Board:
         # Display the bottom line 
         pygame.draw.line(screen, "green", (self.__margin, self.__height - 100),\
             (self.__width - self.__margin, self.__height - 100), 2)
+        
+        # Display player lives
+        img_lives = pygame.transform.rotozoom(self.__player.player_img, 0, 0.7)
+        y_lives = self.__height - 60
+        margin_btw_lives = 10
+        live_width = img_lives.get_size()[0]
+        for i in range (self.__player.remaining_lives):
+            screen.blit(img_lives, (self.__margin + i * (live_width + margin_btw_lives), y_lives))
+
 
     def __endgame(self, screen, win):
         # Display window

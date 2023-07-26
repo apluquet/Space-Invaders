@@ -7,6 +7,7 @@ pygame.display.set_caption('Space Invaders')
 
 screen = pygame.display.set_mode((700, 800))
 clock = pygame.time.Clock()
+running = True
 playing = True
 
 board = board.Board(screen.get_width(), screen.get_height())
@@ -20,7 +21,7 @@ def wait_enter_key():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 return
 
-while playing:
+while running and playing:
     # Pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -42,6 +43,7 @@ while playing:
     clock.tick(60)
     
 # Wat for ENTER key before leaving the game
-wait_enter_key()
+if not playing:
+    wait_enter_key()
 
 pygame.quit()
