@@ -165,11 +165,14 @@ class Board:
         # If no more invaders, player win
         if self.__invaders.sum() == 0:
             self.__endgame(screen, win=True)
+            return False
         # If invaders are too low (same level as the player), player loose
         if  self.__invaders_last_y + self.__nb_invaders_lines *\
             (self.__invader_height + self.__margin_btw_invaders) >\
                 self.__height - 150:
             self.__endgame(screen, win=False)
+            return False
+        return True # Continue game
     
     # Public class methods
     def display_board(self, screen, time):
