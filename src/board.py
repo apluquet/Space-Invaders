@@ -119,21 +119,60 @@ class Board:
         pygame.draw.line(screen, "green", (self.__margin, self.__height - 100),\
             (self.__width - self.__margin, self.__height - 100), 2)
 
+    def __endgame(self, screen, win):
+        # Display window
 
-    def check_victory(self):
+        # Define width and height of window depending of the game screen's size
+        rect_width = (self.__width / 4) * 3
+        rect_height = 300
+
+        # Get coordinates of the top left corner of the window
+        x_top_left = (self.__width   - rect_width) / 2
+        y_top_left = (self.__height - rect_height) / 2 - 100
+        
+        rect = pygame.Rect(x_top_left, y_top_left, rect_width, rect_height)
+
+        # Display wondow and window's border
+        pygame.draw.rect(screen, color="black", rect=rect)
+        pygame.draw.rect(screen, color="white", rect=rect, width=4)
+
+        # Fonts for text
+        title_font = pygame.font.Font("fonts/hannover_messe_sans.otf", 60)
+        text_win_font = pygame.font.Font("fonts/moder_dos_437.ttf", 40)
+        text_score_font = pygame.font.Font("fonts/moder_dos_437.ttf", 30)
+
+        # Define the texts
+        text_title = title_font.render('Space Invaders', False, "white")
+
+        if win:
+            text_end = text_win_font.render('Victory', False, "green")
+        else:
+            text_end = text_win_font.render('Defeat', False, "red")
+
+        text_score = text_score_font.render("Remaining invaders " + str(self.__invaders.sum()), False, "white")
+
+        # Get width of each text in order to center them
+        w_text_end = text_end.get_width()
+        w_text_title = text_title.get_width()
+        w_text_score = text_score.get_width()
+        
+        # Display the texts
+        screen.blit(text_title, (self.__width // 2 - w_text_title // 2,y_top_left + 30))
+        screen.blit(text_end, (self.__width // 2 - w_text_end // 2,y_top_left + 140))
+        screen.blit(text_score, (self.__width // 2 - w_text_score // 2, y_top_left + 230))
+
+    def check_victory(self, screen):
         # If no more invaders, player win
         if self.__invaders.sum() == 0:
-            return 1
+            self.__endgame(screen, win=True)
         # If invaders are too low (same level as the player), player loose
         if  self.__invaders_last_y + self.__nb_invaders_lines *\
             (self.__invader_height + self.__margin_btw_invaders) >\
                 self.__height - 150:
-            return -1
-        else:
-            return 0
-
+            self.__endgame(screen, win=False)
+    
     # Public class methods
     def display_board(self, screen, time):
         self.__display_invaders(screen, time)
         self.__display_player(screen)
-        self.__display_elements(screen)  
+        self.__display_elements(screen)
