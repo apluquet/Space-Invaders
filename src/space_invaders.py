@@ -1,5 +1,5 @@
 import pygame
-import board
+import game
 
 # Pygame setup
 pygame.init()
@@ -10,7 +10,7 @@ clock = pygame.time.Clock()
 running = True
 playing = True
 
-game = board.Game(screen.get_width(), screen.get_height())
+game = game.Game(screen.get_width(), screen.get_height())
 
 def wait_enter_key():
     # Wait for enter before quit
