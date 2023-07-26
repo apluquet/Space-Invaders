@@ -127,6 +127,11 @@ class Board:
         for i in range (self.__player.remaining_lives):
             screen.blit(img_lives, (self.__margin + i * (live_width + margin_btw_lives), y_lives))
 
+        # Display remaining invaders
+        text_font = pygame.font.Font("fonts/moder_dos_437.ttf", 20)
+        text_remaining_invaders = text_font.render("Remaining invaders " + str(self.__invaders.sum()), False, "white")
+        screen.blit(text_remaining_invaders, (self.__width - 350, self.__height - 60))
+
 
     def __endgame(self, screen, win):
         # Display window
