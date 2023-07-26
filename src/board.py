@@ -6,17 +6,18 @@ import player
 
 # This class represents the board of Space Invaders. It manages the position of
 # each element.
-class Board:
+class Game:
     # Private class variables
 
     # Step size in pixels for invaders movement
-    __step_x_size = 15
+    __step_x_size = 5
     __step_y_size = 30
 
     # Image of an invader
     __invader_img = pygame.image.load("img/my_invader.png")
 
-    __margin_btw_invaders = 15
+    __margin_x_btw_invaders = 25
+    __margin_y_btw_invaders = 10
 
     # Size in pxl of the invader image
     __invader_width = __invader_img.get_size()[0]
@@ -27,7 +28,7 @@ class Board:
 
     # Margin between borders of the window and the game in pixels
     __margin = 20
-    
+
     # Class initialization
     def __init__(self, width, height):
         # Screen width and height in pixels
@@ -42,7 +43,7 @@ class Board:
         #self.__invader_square_size = self.__width / self.__nb_squares_width
 
         # Time in ms between invaders move
-        self.__move_time = 10
+        self.__move_time = 100
         # Last time a move was made
         self.__last_move_time = 0
 
@@ -65,7 +66,7 @@ class Board:
         # Remove one margin for the invader furthest to the right
 
         if self.__invaders_last_x + self.__nb_invaders_cols * (self.__invader_width +\
-            self.__margin_btw_invaders) - self.__margin_btw_invaders + self.__step_x_size >=\
+            self.__margin_x_btw_invaders) - self.__margin_x_btw_invaders + self.__step_x_size >=\
                 self.__width - self.__margin:
             return True
         return False
@@ -84,9 +85,9 @@ class Board:
             (not self.__move_right and not self.__is_at_left_border())
 
     def __display_invaders(self, screen, time):
-        
+
         move = False
-        
+
         # Set move to True if enough elapsed time since last movement
         if time - self.__last_move_time > self.__move_time:
             self.__last_move_time += self.__move_time
@@ -104,8 +105,8 @@ class Board:
         for i in range (self.__nb_invaders_cols):
             for j in range (self.__nb_invaders_lines):
                 if (self.__invaders[j,i]):
-                    x = self.__invaders_last_x + i * (self.__invader_width + self.__margin_btw_invaders)
-                    y = self.__invaders_last_y + j * (self.__invader_height + self.__margin_btw_invaders)
+                    x = self.__invaders_last_x + i * (self.__invader_width + self.__margin_x_btw_invaders)
+                    y = self.__invaders_last_y + j * (self.__invader_height + self.__margin_y_btw_invaders)
                     screen.blit(self.__invader_img, (x,y))
 
 
@@ -116,10 +117,10 @@ class Board:
         screen.blit(self.__player.player_img, (player_pos_x, self.__height - 150))
 
     def __display_elements(self, screen):
-        # Display the bottom line 
+        # Display the bottom line
         pygame.draw.line(screen, "green", (self.__margin, self.__height - 100),\
             (self.__width - self.__margin, self.__height - 100), 2)
-        
+
         # Display player lives
         img_lives = pygame.transform.rotozoom(self.__player.player_img, 0, 0.7)
         y_lives = self.__height - 60
@@ -145,7 +146,7 @@ class Board:
         # Get coordinates of the top left corner of the window
         x_top_left = (self.__width   - rect_width) / 2
         y_top_left = (self.__height - rect_height) / 2 - 100
-        
+
         rect = pygame.Rect(x_top_left, y_top_left, rect_width, rect_height)
 
         # Display wondow and window's border
@@ -171,14 +172,14 @@ class Board:
         w_text_end = text_end.get_width()
         w_text_title = text_title.get_width()
         w_text_score = text_score.get_width()
-        
+
         # Display the texts
         screen.blit(text_title, (self.__width // 2 - w_text_title // 2,y_top_left + 30))
         screen.blit(text_end, (self.__width // 2 - w_text_end // 2,y_top_left + 140))
         screen.blit(text_score, (self.__width // 2 - w_text_score // 2, y_top_left + 230))
 
     def __invaders_shoot(self):
-        probability_shoot = 0.1
+        probability_shoot = 0.01
         for i in range (self.__nb_invaders_cols):
             j = self.__nb_invaders_lines - 1
             while not self.__invaders[j][i] and j >= 0:
@@ -188,6 +189,7 @@ class Board:
                 if nb <= probability_shoot:
                     # TODO SHOOT
                     print("SHOOT")
+                    self.__invaders[j][i] = 0
 
     def __check_victory(self, screen):
         # If no more invaders, player win
@@ -196,12 +198,12 @@ class Board:
             return False
         # If invaders are too low (same level as the player), player loose
         if  self.__invaders_last_y + self.__nb_invaders_lines *\
-            (self.__invader_height + self.__margin_btw_invaders) >\
+            (self.__invader_height + self.__margin_y_btw_invaders) >\
                 self.__height - 150:
             self.__endgame(screen, win=False)
             return False
         return True # Continue game
-    
+
     def __display_board(self, screen, time):
         self.__display_invaders(screen, time)
         self.__display_player(screen)

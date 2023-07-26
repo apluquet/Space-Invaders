@@ -10,12 +10,12 @@ clock = pygame.time.Clock()
 running = True
 playing = True
 
-board = board.Board(screen.get_width(), screen.get_height())
+game = board.Game(screen.get_width(), screen.get_height())
 
 def wait_enter_key():
     # Wait for enter before quit
     while True:
-        for event in pygame.event.get(): 
+        for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
@@ -31,14 +31,14 @@ while running and playing:
     screen.fill("black")
     # Display the elements of the game (invaders, player, other elements)
     time = pygame.time.get_ticks()
-    playing = board.play(screen, time)
+    playing = game.play(screen, time)
 
     # Flip() the display to put your work on screen
     pygame.display.flip()
 
     # Limits FPS to 60
     clock.tick(60)
-    
+
 # Wat for ENTER key before leaving the game
 if not playing:
     wait_enter_key()
