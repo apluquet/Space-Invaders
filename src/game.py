@@ -41,11 +41,8 @@ class Game:
                     screen.blit(self.invaders.img, (x, y))
 
     def display_player(self, screen):
-        self.player.get_keyboard_input()
-        player_pos_x = self.player.pos_x
-        player_pos_y = self.player.pos_y
-
-        screen.blit(self.player.player_img, (player_pos_x, player_pos_y))
+        self.player.update_pos()
+        screen.blit(self.player.player_img, (self.player.x, self.player.y))
 
     def display_elements(self, screen):
         # Display the bottom line
@@ -81,12 +78,12 @@ class Game:
         for i, bullet in enumerate(self.bullets):
             remove_bullet = bullet.update(self.bottom_screen_game - bullet_height)
             if (
-                self.player.pos_x <= bullet.x
-                and bullet.x <= self.player.pos_x + self.player.width
+                self.player.x <= bullet.x
+                and bullet.x <= self.player.x + self.player.width
             ):
                 if (
-                    self.player.pos_y + self.player.height // 2 <= bullet.y
-                    and bullet.y <= self.player.pos_y + self.player.height
+                    self.player.y + self.player.height // 2 <= bullet.y
+                    and bullet.y <= self.player.y + self.player.height
                 ):
                     # Bullet touches player
                     remove_bullet = True
@@ -170,7 +167,7 @@ class Game:
             self.last_move_time += self.move_time
             self.invaders.move(self.width)
 
-        self.bullets += self.invaders_shoot()
+        self.bullets += self.invaders.shoot()
         self.display_board(screen)
         game_continues = self.check_victory(screen)
 
