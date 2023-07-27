@@ -10,7 +10,7 @@ class Bullet:
         self.x = x
         self.y = y
         self.direction = direction
-        self.enemy_bullet = False
+        self.enemy_bullet = enemy_bullet
 
     def update(self, max_y_pos):
         self.x = self.x + self.direction[0] * self.speed
