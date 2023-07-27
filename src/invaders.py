@@ -6,6 +6,7 @@ from bullet import Bullet
 
 class Invaders:
     img = pygame.image.load("img/my_invader.png")
+    img_exploding = pygame.image.load("img/my_exploding_invader.png")
     width = img.get_size()[0]
     height = img.get_size()[1]
 
@@ -73,7 +74,7 @@ class Invaders:
         y = self.y + line * (self.height + self.margin_y)
         return (x, y)
 
-    def shoot(self):
+    def shoot(self, screen):
         # Lit of new bullets 
         bullets = []
 
@@ -87,6 +88,14 @@ class Invaders:
             if j >= 0:
                 nb = random.random()
                 if nb <= self.shoot_probability:
+                    
+                    explode_width = self.img_exploding.get_size()[0]
+                    explode_height = self.img_exploding.get_size()[1]
+                    x, y = self.get_invader_pos(j, i)
+                    x = x - (explode_width - self.width) // 2
+                    y = y - (explode_height - self.height) // 2
+                    screen.blit(self.img_exploding, (x,y))
+
                     self.invaders[j][i] = 0
 
                     x, y = self.get_invader_pos(j, i)
