@@ -42,7 +42,7 @@ class Game:
 
     def display_player(self, screen):
         self.player.update_pos()
-        screen.blit(self.player.player_img, (self.player.x, self.player.y))
+        screen.blit(self.player.img, (self.player.x, self.player.y))
 
     def display_elements(self, screen):
         # Display the bottom line
@@ -55,7 +55,7 @@ class Game:
         )
 
         # Display player lives
-        img_lives = pygame.transform.rotozoom(self.player.player_img, 0, 0.7)
+        img_lives = pygame.transform.rotozoom(self.player.img, 0, 0.7)
         y_lives = self.height - 60
         margin_btw_lives = 10
         live_width = img_lives.get_size()[0]
