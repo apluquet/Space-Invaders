@@ -95,6 +95,10 @@ class Game:
             pygame.draw.rect(screen, color="white", rect=rect)
 
     def endgame(self, screen, win):
+        # Update screen a last time to display correct remaining lives and invaders
+        screen.fill("black")
+        self.display_board(screen)
+
         # Display window
 
         # Define width and height of window depending of the game screen's size
@@ -158,8 +162,8 @@ class Game:
 
     def display_board(self, screen):
         self.display_invaders(screen)
-        self.display_player(screen)
         self.display_elements(screen)
+        self.display_player(screen)
 
     def play(self, screen, time):
         # Update invaders' position
@@ -167,7 +171,7 @@ class Game:
             self.last_move_time += self.move_time
             self.invaders.move(self.width)
 
-        self.bullets += self.invaders.shoot()
+        self.bullets += self.invaders.shoot(screen)
         self.display_board(screen)
         game_continues = self.check_victory(screen)
 
