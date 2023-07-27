@@ -54,6 +54,11 @@ class Game:
             2,
         )
 
+        # Display bullets
+        for i, bullet in enumerate(self.bullets):
+            rect = pygame.Rect(bullet.x, bullet.y, bullet.width, bullet.height)
+            pygame.draw.rect(screen, color="white", rect=rect)
+
         # Display player lives
         img_lives = pygame.transform.rotozoom(self.player.img, 0, 0.7)
         y_lives = self.height - 60
@@ -65,17 +70,20 @@ class Game:
                 (self.margin + i * (live_width + margin_btw_lives), y_lives),
             )
 
-        # Display remaining invaders
+        # Display score
         text_font = pygame.font.Font("fonts/moder_dos_437.ttf", 20)
+        text_score = text_font.render("Score 42", False, "white")
+        screen.blit(text_score, (self.width - 450, self.height - 60))
+
+        # Display remaining invaders
         text_remaining_invaders = text_font.render(
             "Remaining invaders " + str(self.invaders.remaining()), False, "white"
         )
-        screen.blit(text_remaining_invaders, (self.width - 350, self.height - 60))
-
-        # Display bullets
-        for i, bullet in enumerate(self.bullets):
-            rect = pygame.Rect(bullet.x, bullet.y, bullet.width, bullet.height)
-            pygame.draw.rect(screen, color="white", rect=rect)
+        width_text = text_remaining_invaders.get_width()
+        screen.blit(
+            text_remaining_invaders,
+            (self.width - width_text - self.margin, self.height - 60),
+        )
 
     def collide_bullets(self, screen):
         # Iterate through bullet to check collision with player or limit with
@@ -84,10 +92,15 @@ class Game:
             remove_bullet = False
             player = self.player
 
-            # Collision with player
-            if bullet.collide(player.x, player.y, player.width, player.height):
+            # Enemy bullet collides with player
+            if bullet.enemy_bullet and bullet.collide(
+                player.x, player.y, player.width, player.height
+            ):
                 self.player.explosion(screen)
                 remove_bullet = True
+
+            # Player bullet collides with invader
+            # TODO
 
             # Exceed game's bottom limit
             remove_bullet = remove_bullet or bullet.update(

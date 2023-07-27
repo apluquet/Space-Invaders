@@ -19,7 +19,7 @@ class Invaders:
     nb_cols = 11
     nb_lines = 5
 
-    shoot_probability = 0.01
+    shoot_probability = 0.0025
 
     def __init__(self, x, y, board_margin, bottom_limit):
         self.invaders = np.ones((self.nb_lines, self.nb_cols), int)
@@ -75,7 +75,7 @@ class Invaders:
         return (x, y)
 
     def shoot(self, screen):
-        # Lit of new bullets 
+        # Lit of new bullets
         bullets = []
 
         # Find for each column, the invader at the lowest spot
@@ -88,7 +88,11 @@ class Invaders:
             if j >= 0:
                 nb = random.random()
                 if nb <= self.shoot_probability:
-                    
+
+                    # Invader explose if it shoots until the player will be able
+                    # shoot too. This way, the invader's explosion could be tried
+                    # and could explore the tree ways of finishing the game (no
+                    # more invader, invaders reached player, player killed)
                     explode_width = self.img_exploding.get_size()[0]
                     explode_height = self.img_exploding.get_size()[1]
                     x, y = self.get_invader_pos(j, i)
