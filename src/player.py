@@ -1,7 +1,7 @@
 import pygame
 
-class Player:
 
+class Player:
     __dt = 4
     player_img = pygame.image.load("img/my_player.png")
     width = player_img.get_size()[0]
@@ -15,7 +15,6 @@ class Player:
         self.limit_x_max = board_width - margin - self.player_img.get_size()[0]
 
         self.remaining_lives = 3
-
 
     def get_keyboard_input(self):
         keys = pygame.key.get_pressed()

@@ -12,4 +12,3 @@ class Bullet:
         self.y = self.y + self.__direction[1] * self.__dt
 
         return self.y >= max_y_pos
-
