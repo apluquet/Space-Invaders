@@ -27,6 +27,7 @@ class Game:
     __nb_invaders_cols = 11
     __nb_invaders_lines = 5
 
+
     # Margin between borders of the window and the game in pixels
     __margin = 20
 
@@ -60,6 +61,7 @@ class Game:
         self.__player = player.Player(self.__width / 2, self.__width, self.__margin)
 
         self.__bullets = []
+        self.__bottom_screen_game = self.__height - 100
 
     # Private class methods
     def __is_at_right_border(self):
@@ -121,8 +123,8 @@ class Game:
 
     def __display_elements(self, screen):
         # Display the bottom line
-        pygame.draw.line(screen, "green", (self.__margin, self.__height - 100),\
-            (self.__width - self.__margin, self.__height - 100), 2)
+        pygame.draw.line(screen, "green", (self.__margin, self.__bottom_screen_game),\
+            (self.__width - self.__margin, self.__bottom_screen_game), 2)
 
         # Display player lives
         img_lives = pygame.transform.rotozoom(self.__player.player_img, 0, 0.7)
@@ -138,9 +140,13 @@ class Game:
         screen.blit(text_remaining_invaders, (self.__width - 350, self.__height - 60))
 
         # Display bullets
-        for bullet in self.__bullets:
-            bullet.update_position(600)
-            rect = pygame.Rect(bullet.x, bullet.y, 2, 6)
+        bullet_height = 6
+        bullet_width = 2
+        for i, bullet in enumerate(self.__bullets):
+            remove_bullet = bullet.update(self.__bottom_screen_game - bullet_height)
+            if remove_bullet:
+                del self.__bullets[i]
+            rect = pygame.Rect(bullet.x, bullet.y, bullet_width, bullet_height)
             pygame.draw.rect(screen, color="white", rect=rect)
 
 

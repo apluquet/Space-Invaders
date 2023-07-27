@@ -7,9 +7,9 @@ class Bullet:
         self.__direction = direction
         self.enemy_bullet = False
 
-    def update_position(self, max_y_pos):
+    def update(self, max_y_pos):
         self.x = self.x + self.__direction[0] * self.__dt
         self.y = self.y + self.__direction[1] * self.__dt
 
-        return self.y < max_y_pos
+        return self.y >= max_y_pos
 
