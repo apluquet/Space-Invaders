@@ -73,28 +73,29 @@ class Game:
         screen.blit(text_remaining_invaders, (self.width - 350, self.height - 60))
 
         # Display bullets
-        bullet_height = 6
-        bullet_width = 2
+        for i, bullet in enumerate(self.bullets):
+            rect = pygame.Rect(bullet.x, bullet.y, bullet.width, bullet.height)
+            pygame.draw.rect(screen, color="white", rect=rect)
+
+    def collide_bullets(self, screen):
+        # Iterate through bullet to check collision with player or limit with
+        # bottom of the game
         for i, bullet in enumerate(self.bullets):
             remove_bullet = False
+            player = self.player
 
-            # Check if player collides with bullet
-            if bullet.collision(
-                self.player.x, self.player.y, self.player.width, self.player.height
-            ):
+            # Collision with player
+            if bullet.collide(player.x, player.y, player.width, player.height):
                 self.player.explosion(screen)
                 remove_bullet = True
 
-            # Check if bullet below game limit
+            # Exceed game's bottom limit
             remove_bullet = remove_bullet or bullet.update(
-                self.bottom_screen_game - bullet_height
+                self.bottom_screen_game - bullet.height
             )
 
             if remove_bullet:
                 del self.bullets[i]
-            rect = pygame.Rect(bullet.x, bullet.y, bullet_width, bullet_height)
-            pygame.draw.rect(screen, color="white", rect=rect)
-    
 
     def endgame(self, screen, win):
         # Display window
@@ -169,14 +170,18 @@ class Game:
     def play(self, screen, time):
         game_continues, win = self.check_victory(screen)
 
-        # Update invaders' position
         if game_continues:
             if time - self.last_move_time > self.move_time:
                 self.last_move_time += self.move_time
+
+                # Update invaders' position
                 self.invaders.move(self.width)
 
+            # Manage bullets : shoot and remove if collision
             self.bullets += self.invaders.shoot(screen)
+            self.collide_bullets(screen)
 
+        # Display all elements of the board (player, invaders, bullets, interface)
         self.display_board(screen)
 
         if not game_continues:
