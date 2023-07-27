@@ -4,9 +4,12 @@ class Player:
 
     __dt = 4
     player_img = pygame.image.load("img/my_player.png")
+    width = player_img.get_size()[0]
+    height = player_img.get_size()[1]
 
-    def __init__(self, pos_x, board_width, margin):
-        self.pos_x = pos_x
+    def __init__(self, pos_x, pos_y, board_width, margin):
+        self.pos_x = pos_x - self.width // 2
+        self.pos_y = pos_y
 
         self.limit_x_min = margin
         self.limit_x_max = board_width - margin - self.player_img.get_size()[0]

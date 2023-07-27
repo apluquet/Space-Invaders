@@ -58,7 +58,7 @@ class Game:
         # or not
         self.__move_right = True
 
-        self.__player = player.Player(self.__width / 2, self.__width, self.__margin)
+        self.__player = player.Player(self.__width / 2, self.__height - 150, self.__width, self.__margin)
 
         self.__bullets = []
         self.__bottom_screen_game = self.__height - 100
@@ -118,8 +118,9 @@ class Game:
     def __display_player(self, screen):
         self.__player.get_keyboard_input()
         player_pos_x = self.__player.pos_x
+        player_pos_y = self.__player.pos_y
 
-        screen.blit(self.__player.player_img, (player_pos_x, self.__height - 150))
+        screen.blit(self.__player.player_img, (player_pos_x, player_pos_y))
 
     def __display_elements(self, screen):
         # Display the bottom line
@@ -144,6 +145,12 @@ class Game:
         bullet_width = 2
         for i, bullet in enumerate(self.__bullets):
             remove_bullet = bullet.update(self.__bottom_screen_game - bullet_height)
+            if self.__player.pos_x <= bullet.x and bullet.x <= self.__player.pos_x + self.__player.width:
+                if self.__player.pos_y + self.__player.height // 2 <= bullet.y and bullet.y <= self.__player.pos_y + self.__player.height:
+                    # Bullet touches player
+                    remove_bullet = True
+                    self.__player.remaining_lives -= 1
+
             if remove_bullet:
                 del self.__bullets[i]
             rect = pygame.Rect(bullet.x, bullet.y, bullet_width, bullet_height)
@@ -219,12 +226,19 @@ class Game:
         if self.__invaders.sum() == 0:
             self.__endgame(screen, win=True)
             return False
-        # If invaders are too low (same level as the player), player loose
+
+        # If invaders are too low (same level as the player), player loses
         if  self.__invaders_last_y + self.__nb_invaders_lines *\
             (self.__invader_height + self.__margin_y_btw_invaders) >\
                 self.__height - 150:
             self.__endgame(screen, win=False)
             return False
+        
+        # If player has no more lives, player loses
+        if self.__player.remaining_lives == 0:
+            self.__endgame(screen, win=False)
+            return False
+        
         return True # Continue game
 
     def __display_board(self, screen, time):
