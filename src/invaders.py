@@ -4,6 +4,7 @@ import numpy as np
 
 from bullet import Bullet
 
+
 class Invaders:
     img = pygame.image.load("img/my_invader.png")
     img_exploding = pygame.image.load("img/my_exploding_invader.png")
@@ -19,7 +20,7 @@ class Invaders:
     nb_cols = 11
     nb_lines = 5
 
-    shoot_probability = 0.0025
+    shoot_probability = 0.00525
 
     def __init__(self, x, y, board_margin, bottom_limit):
         self.invaders = np.ones((self.nb_lines, self.nb_cols), int)
@@ -39,6 +40,40 @@ class Invaders:
     def too_low(self):
         y_lowest_invader = self.y + self.nb_lines * (self.height + self.margin_y)
         return y_lowest_invader > self.bottom_limit
+
+    def update_cols_lines(self):
+        sum_cols = self.invaders.sum(axis=1)
+        sum_lines = self.invaders.sum(axis=0)
+
+        # Remove empty top lines
+        while len(sum_cols) and sum_cols[0] == 0:
+            self.nb_lines -= 1
+            self.invaders = np.delete(self.invaders, 0, 0)
+
+            self.y = self.y + self.margin_y + self.height
+            sum_cols = np.delete(sum_cols, 0)
+
+        # Remove empty bottom lines
+        while len(sum_cols) and sum_cols[-1] == 0:
+            self.nb_lines -= 1
+            self.invaders = np.delete(self.invaders, -1, 0)
+
+            sum_cols = np.delete(sum_cols, -1)
+
+        # Remove empty left columns
+        while len(sum_lines) and sum_lines[0] == 0:
+            self.nb_cols -= 1
+            self.invaders = np.delete(self.invaders, 0, 1)
+
+            self.x = self.x + self.margin_x + self.width
+            sum_lines = np.delete(sum_lines, 0)
+
+        # Remove empty right columns
+        while len(sum_lines) and sum_lines[-1] == 0:
+            self.nb_cols -= 1
+            self.invaders = np.delete(self.invaders, -1, 1)
+
+            sum_lines = np.delete(sum_lines, -1)
 
     def is_at_right_border(self, board_width):
         max_right = board_width - self.board_margin
@@ -63,6 +98,11 @@ class Invaders:
         )
 
     def move(self, board_width):
+        # Before moving, update number of columns and lines. They can change
+        # because of dead invaders. It will influence the move of invaders as
+        # the invaders will try to go as close as possible to the game's limits
+        self.update_cols_lines()
+
         if self.can_move_side(board_width):
             self.x += self.step_x if self.move_right else -self.step_x
         else:
@@ -88,7 +128,6 @@ class Invaders:
             if j >= 0:
                 nb = random.random()
                 if nb <= self.shoot_probability:
-
                     # Invader explose if it shoots until the player will be able
                     # shoot too. This way, the invader's explosion could be tried
                     # and could explore the tree ways of finishing the game (no
@@ -98,7 +137,7 @@ class Invaders:
                     x, y = self.get_invader_pos(j, i)
                     x = x - (explode_width - self.width) // 2
                     y = y - (explode_height - self.height) // 2
-                    screen.blit(self.img_exploding, (x,y))
+                    screen.blit(self.img_exploding, (x, y))
 
                     self.invaders[j][i] = 0
 
