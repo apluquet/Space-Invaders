@@ -5,8 +5,8 @@ import random
 import player
 import bullet
 
-# This class represents the board of Space Invaders. It manages the position of
-# each element.
+# This class represents the game of Space Invaders. It manages the position of
+# each element and saves all object of the game.
 class Game:
     # Private class variables
 
