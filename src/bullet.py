@@ -12,3 +12,9 @@ class Bullet:
         self.y = self.y + self.__direction[1] * self.__dt
 
         return self.y >= max_y_pos
+
+    def collision(self, x, y, width, height):
+        if x <= self.x and self.x <= x + width:
+            if y <= self.y and self.y <= y + height:
+                return True
+        return False
