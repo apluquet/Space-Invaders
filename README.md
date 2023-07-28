@@ -64,7 +64,8 @@ $ python space_invaders.py
 ## Languages and tools
 
 
-![Python](https://img.shields.io/badge/-Python-3776AB?logo=Python&logoColor=white&style=for-the-badge) 
+![Python](https://img.shields.io/badge/-Python-3776AB?logo=Python&logoColor=white&style=for-the-badge)
+![Pygame](https://img.shields.io/badge/-Pygame-deff3d?logo=Pygame&logoColor=white&style=for-the-badge) 
 ![Numpy](https://img.shields.io/badge/-NUMPY-013243?style=for-the-badge&logo=numpy&logoColor=white)
 ![Gimp](https://img.shields.io/badge/-GIMP-5C5543?style=for-the-badge&logo=gimp&logoColor=white)
 ![Git](https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white)
