@@ -17,9 +17,9 @@ def wait_enter_key():
     # Wait for enter before quit
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+            if (event.type == pygame.QUIT) or (
+                event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN
+            ):
                 return
 
 
