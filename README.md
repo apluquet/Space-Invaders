@@ -25,7 +25,7 @@ It seems to be the original game
 
 ```sh
 $ git clone <this-repo>
-$ cd Space-Invaders
+$ cd Space-Invaders/
 $ virtualenv venv # Creation of a virtual environment (only the first time)
 $ source venv/bin/activate
 $ pip install -r requirements.txt
@@ -33,8 +33,9 @@ $ pip install -r requirements.txt
 ## Usage
 
 ```sh
-$ cd Space-Invaders
+$ cd Space-Invaders/
 $ source venv/bin/activate
+$ cd src/
 $ python space_invaders.py
 ```
 
