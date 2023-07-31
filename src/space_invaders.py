@@ -24,7 +24,7 @@ def wait_enter_key():
 
 
 while running and playing:
-    # Pygame.QUIT event means the user clicked X to close your window
+    # Quit game if the user clicked exit to close the window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
