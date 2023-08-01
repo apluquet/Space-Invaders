@@ -1,7 +1,7 @@
 # [Space Invaders](https://en.wikipedia.org/wiki/Space_Invaders)
 
-This project was created as part of an application to the [recurse
-center](https://www.recurse.com/). The subject is the following : 
+This project was created as part of an application to the [Recurse
+Center](https://www.recurse.com/). The subject is the following : 
 
 ```
 Space Invaders
